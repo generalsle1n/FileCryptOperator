@@ -2,16 +2,21 @@
 using System.Text;
 
 string Password = "Secure";
-string Salt = "Cool";
-byte[] key = Encoding.UTF8.GetBytes(Password.ToCharArray());
-byte[] iv = Encoding.UTF8.GetBytes(Salt.ToCharArray());
+string IV = "Cool";
 
-FileCryptHelper fileCryptHelper = new FileCryptHelper(key, iv);
+using (FileCryptHelper fileCryptHelper = new FileCryptHelper(AESSize.Strong, Password, IV))
+{
+    string folder = @"C:\temp\a\";
+    string[] Allfiles = Directory.GetFiles(folder);
 
-string FilePath = @"C:\temp\text.txt";
+    foreach(string File in Allfiles)
+    {
+        fileCryptHelper.EncryptFile(File);
+    }
 
-fileCryptHelper.EncryptFile(FilePath);
-
-string EncryptedFile = @"C:\temp\text.dec";
-
-fileCryptHelper.DecryptFile(EncryptedFile);
+    string[] AllNewfiles = Directory.GetFiles(folder);
+    foreach (string File in AllNewfiles)
+    {
+        fileCryptHelper.DecryptFile(File);
+    }
+}
