@@ -14,51 +14,13 @@ namespace FileCryptClass
 
         public FileCryptHelper(byte[] key, byte[] iv)
         {
-            _key = key;
-            _iv = iv;
-
-            _crypt = Aes.Create();
-            _crypt.GenerateKey();
-            _crypt.GenerateIV();
+            _key = FillUpBytes(key);
+            _iv = FillUpBytes(iv);
         }
 
-        private string ReplaceFileExtension(string Path, string Extension)
+        private byte[] FillUpBytes(byte[] bytes)
         {
-            string[] SplittedPath = Path.Split(".");
 
-            return Path.Replace(SplittedPath[SplittedPath.Length -1], Extension);
-        }
-
-        private byte[] CreateByteFileType(string FileName, byte[] Content)
-        {
-            string[] Splitted = FileName.Split(".");
-            string FileExtension = Splitted[Splitted.Length - 1];
-            byte[] FileType = Encoding.UTF8.GetBytes(FileExtension);
-
-            byte[] NewContent = new byte[Content.Length + FileType.Length + 1];
-            Content.CopyTo(NewContent, 0);
-            FileType.CopyTo(NewContent, Content.Length +1);
-
-            return NewContent;
-        }
-
-        private KeyValuePair<byte[], string> ExtractFileType(byte[] Content)
-        {
-            List<byte> rawContent = new List<byte>();
-            List<byte> type = new List<byte>();
-
-            bool next = false;
-            foreach(byte by in Content)
-            {
-                if(by != 0 && next == false)
-                {
-                    rawContent.Add(by);
-                }else if(by != 0 && next)
-                {
-                    type.Add(by);
-                }
-            }
-            return new KeyValuePair<byte[], string>(rawContent.ToArray(), Encoding.UTF8.GetString(type.ToArray()));
         }
 
         public void EncryptFile(string FilePath)
