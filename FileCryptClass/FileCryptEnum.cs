@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace FileCryptClass
 {
-    internal class FileCryptEnum
+    public enum AESSize
     {
+        Weak = 128,
+        Basic = 192,
+        Strong = 256
     }
 }
